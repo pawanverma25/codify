@@ -17,7 +17,7 @@ function Navbar() {
 				</a>
 				<a
 					className="flex justify-center items-center gap-1 hover:text-red-600"
-					href="/">
+					href="https://github.com/pawanverma25/codify">
 					<FiGithub />
 					Github
 				</a>
