@@ -23,6 +23,7 @@ function CodeEditor() {
 	const [bgMenuOpen, setBgMenuOpen] = useState(false);
 	const [bgMenuType, setBgMenuType] = useState(true);
 	const ideRef = useRef(null);
+	const bgMenuRef = useRef(null);
 
 	const [editorHeight, setEditorHeight] = useState(null);
 
@@ -52,8 +53,9 @@ function CodeEditor() {
 	return (
 		<div
 			className="flex-1 w-98 py-16 flex flex-col gap-8"
-			onClick={() => {
-				if (bgMenuOpen) setBgMenuOpen(false);
+			onClick={(e) => {
+				if (bgMenuOpen && !bgMenuRef.current.contains(e.target))
+					setBgMenuOpen(false);
 			}}>
 			<div className="flex justify-stretch p-2 mx-auto gap-2 rounded-md bg-slate-100 lg:w-[60%] md:w-[80%] sm:w-[90%] w-[95%]">
 				<Select
@@ -91,42 +93,43 @@ function CodeEditor() {
 						className={`rounded-[4px] flex-1 bg-white h-full ${background}`}
 						onClick={() => setBgMenuOpen(!bgMenuOpen)}></button>
 
-					{bgMenuOpen && (
-						<div
-							autoFocus={true}
-							className="absolute z-10 w-80 bg-white rounded-[4px] border border-[#cccccc] top-12 flex flex-col mx-auto p-5 gap-3">
-							<div className="bg-[#f1f5f9] h-12 flex p-2 rounded-[4px] gap-2">
-								<button
-									className={`flex-1 rounded-[4px] ${
-										bgMenuType ? "bg-white shadow-sm" : ""
-									}`}
-									onClick={() => setBgMenuType(true)}>
-									Gradient
-								</button>
-								<button
-									className={`flex-1 rounded-[4px] ${
-										bgMenuType ? "" : "bg-white shadow-sm"
-									}`}
-									onClick={() => setBgMenuType(false)}>
-									Color
-								</button>
-							</div>
-							<div className="flex flex-wrap justify-between gap-3">
-								{(bgMenuType
-									? gradientsList
-									: backgroundColorList
-								).map((gradient, index) => (
-									<div
-										key={"gradient-" + index}
-										className={`w-8 h-8 rounded-full ${gradient}`}
-										onClick={() => {
-											setBackGround(gradient);
-											setBgMenuOpen(false);
-										}}></div>
-								))}
-							</div>
+					<div
+						ref={bgMenuRef}
+						autoFocus={true}
+						className={`absolute z-10 w-80 bg-white rounded-[4px] border border-[#cccccc] top-12 flex flex-col mx-auto p-5 gap-3 transition-all duration-500 ease-in-out ${
+							!bgMenuOpen && "hidden"
+						}`}>
+						<div className="bg-[#f1f5f9] h-12 flex p-2 rounded-[4px] gap-2">
+							<button
+								className={`flex-1 rounded-[4px] ${
+									bgMenuType ? "bg-white shadow-sm" : ""
+								}`}
+								onClick={() => setBgMenuType(true)}>
+								Gradient
+							</button>
+							<button
+								className={`flex-1 rounded-[4px] ${
+									bgMenuType ? "" : "bg-white shadow-sm"
+								}`}
+								onClick={() => setBgMenuType(false)}>
+								Color
+							</button>
 						</div>
-					)}
+						<div className="flex flex-wrap justify-between gap-3">
+							{(bgMenuType
+								? gradientsList
+								: backgroundColorList
+							).map((gradient, index) => (
+								<div
+									key={"gradient-" + index}
+									className={`w-8 h-8 rounded-full ${gradient}`}
+									onClick={() => {
+										setBackGround(gradient);
+										setBgMenuOpen(false);
+									}}></div>
+							))}
+						</div>
+					</div>
 				</div>
 				<button
 					onClick={() => {
